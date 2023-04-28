@@ -14,6 +14,8 @@
 #define _USE_MATH_DEFINES
 #include <iostream>  // for CIN and COUT
 #include <cmath>
+//#include <string.h>
+#include <string>
 using namespace std;
 
 #define WEIGHT   15103.000   // Weight in KG
@@ -35,7 +37,7 @@ struct physics{
     double ddx;                 // Total horizontal acceleration
     double ddy;                 // Total vertical acceleration
     double v;                   // Total velocity
-    double time;                // keep track of the time the rover has been running
+    int time;                // keep track of the time the rover has been running
 };
 /***************************************************
  * COMPUTE DISTANCE
@@ -210,7 +212,7 @@ void get_rover_init(physics &rover) {
     rover.dx = prompt("What is your horizontal velocity (m/s)? ");
     rover.dy = prompt("What is your vertical velocity (m/s)? ");
     rover.y = prompt("what is your altitute (m)? ");
-    rover.x = prompt("What is your position (m)? ");
+    rover.x = 0;
     rover.aDegrees = prompt("What is the angle of hte LM where 0 is up (degrees)? ");
     rover.t = 1;//prompt("What is the time interval (s)? ");
     rover.time = 0;
@@ -241,14 +243,11 @@ void rover_move(physics &rover) {
  * velocity
  ****************************************************************/
 void display(physics &rover) {
+    //string time = to_string(rover.time);
     cout.setf(ios::fixed | ios::showpoint);
     cout.precision(2);
-    //cout << "\tNew position:   (" << rover.x << ", " << rover.y << ")m\n";
-    //cout << "\tNew velocity:   (" << rover.dx << ", " << rover.dy << ")m/s\n";
-    //cout << "\tTotal velocity:  " << rover.v << "m/s\n\n";
-
-    cout << rover.time << " - x,y:(" << rover.x << ", " << rover.y << "m dx,dy:(" << rover.dx << ", "
-        << rover.dy << ")m/s speed:" << rover.v << "m/s angle:" << rover.aDegrees << "\n";
+    cout << rover.time << "s - x,y:(" << rover.x << ", " << rover.y << ")m  dx,dy:(" << rover.dx << ", "
+        << rover.dy << ")m/s  speed:" << rover.v << "m/s  angle:" << rover.aDegrees << "\n";
 }
 
 /****************************************************************
@@ -274,20 +273,24 @@ void run_tests() {
     test_2.t = 1;
     test_2.time = 0;
     int sec;
+    cout << "\nFor the next 5 seconds with the main engine on, the position of the lander is: \n\n";
     for (sec = 0; sec < 5; sec++) {
         rover_move(test_1);
         display(test_1);
     }
     test_1.aDegrees = 45;
+    cout << "\nFor the next 5 seconds with the main engine on, the position of the lander is: \n\n";
     for (sec = 0; sec < 5; sec++) {
         rover_move(test_1);
         display(test_1);
     }
+    cout << "\nFor the next 5 seconds with the main engine on, the position of the lander is: \n\n";
     for (sec = 0; sec < 5; sec++) {
         rover_move(test_2);
         display(test_2);
     }
     test_2.aDegrees = 0;
+    cout << "\nFor the next 5 seconds with the main engine on, the position of the lander is: \n\n";
     for (sec = 0; sec < 5; sec++) {
         rover_move(test_2);
         display(test_2);
@@ -303,16 +306,18 @@ void run() {
     physics rover = {}; //create a blank physics struct to track the rovor
     get_rover_init(rover); //get inital conditions of the rover
     int sec;                //initialize counter
+    cout << "\nFor the next 5 seconds with the main engine on, the position of the lander is: \n\n";
     for (sec = 0; sec < 5; sec++) { //for every condition move and display 5 times
         rover_move(rover);
         display(rover);
     }
+    cout << endl;
     rover.aDegrees = prompt("What is the new angle of the LM where 0 is up (degrees)? "); //get new rover angle
+    cout << "\nFor the next 5 seconds with the main engine on, the position of the lander is: \n\n";
     for (sec = 0; sec < 5; sec++) { //move 5 more times
         rover_move(rover);
         display(rover);
     }
-    run_tests(); //have the rest of the tests automated
 }
 /****************************************************************
  * MAIN
@@ -321,5 +326,6 @@ void run() {
 int main()
 {
     run();
+    run_tests();
     return 0;
 }
